@@ -1,0 +1,43 @@
+In primul rand, cele doua fisiere .c fac acelasi lucru si prin aceeasi metoda, doar ca unul scrie intr-un fisier .dat si celalat intr-un fisier .txt(deoarece nu am mai facut programul pentru citire a structurilor din fisier si asa se poate vedea cum decurge programul).
+
+
+DESCRIERE PROGRAM:
+
+Programul incepe cu cele doua functii care iau nastere in main() prin doua threaduri, generateNaOH si generate FeCl3. Acestea aloca si dezaloca toate variabilele specifice moleculei de care se ocupa si creeaza fiecare cate un thread responsabil pentru generarea threadurilor specifice atomilor necesari moleculelor specifice functiilor generateNaOH si generate FeCl3.
+
+Astfel, in prezent avem 5 threaduri care ruleaza in procesul programului: main(), generateNaOH(), generateFeCl3(), newAtomNaOrOOrH() si generateFeOrCl(). Incepe generarea threadurilor specifice fiecarui atom necesar moleculelor pentru reactie.
+
+Pentru sincronizarea crearii moleculelor am folosit metoda pe care ati pus-o pe moodle la problema moleculei de apa si am adaptat-o moleculelor specifice problemei. Folosim counterele pentru atomi si barierele specifice fiecarui tip de molecula pentru a asigura ca nu exista hazarduri de scriere/citire asupra counterelor de atomi.
+
+Cand apare un numar suficient de atomi pentru a crea molecula, de exemplu NaOH, unde sa zicem ca O este threadul care se executa dupa Na si H, threadul O elibereaza semafoarele atomilor de Na si H pentru ca threadurile acestora sa se termine, decrementeaza counterele atomilor si preia functia moleculei apeland o functie de tip bond precum bondNaOH() la care se transmit ca parametrii tipul si numarul atomului care o apeleaza, pentru a putea scrie corespunzator statisticile cerute.
+
+Functiile de tip bond sunt pentru reactie precum atomii pentru molecule, deci metoda de sincronizare a moleculelor este pe acelasi principiu ca si cea de sincronizare a atomilor: cand se atinge numarul necesar de molecule pentru reactie, ultima molecula care intra in reactie elibereaza celelalte molecule si preia mai departe functia reactiei, creand cei 3 atomi de NaCl de fiecare data cand reactia are loc.
+
+
+DETALII:
+
+Deoarece se doreste un numar random si "nelimitat" de threaduri, le-am stocat intr-o lista.
+
+Apelul usleep() din functiile newAtom are rolul de a incetini crearea threadurilor deoarece pentru numere foarte mari N se poate ca memoria sa fie depasita si ar putea aparea din perror() wariningul "Resource temporarely unavailable" pana la eliberarea acesteia.
+
+Stiu ca puteam folosi semafoare cu nume pentru sincronizare insa am vazut ca in exemplele din lab9 ati folosit majoritar cele cu nume(sau asa imi amintesc) si am vrut sa le testez si pe acestea, chiar daca am facut cu mmap().
+
+Pentru scriere in fisier am folosit un buffer mapat in memorie de 2,000,000 bytes pe care il scriu in fisier la finalul programului cand fac unmap.
+
+Facand ftruncate de 2,000,000 la fisier la inceputul programului, inainte de terminarea programului fac din nou truncate dupa dimensiunea bufferului pentru a nu pierde memorie de stocare.
+
+P.S.: Tocmai am observat ca am uitat sa apelez sem_destroy() pe semafoare... whoops
+
+
+CUM AM ABORDAT PROBLEMA:
+
+-Am rezolvat problema 4 din lab9;
+-Am lasat crearea structurilor la sfarsit;
+-Am adaptat problema la moleculele de la tema2;
+-Am modificat sa fac scrierea in fisier dupa care am continuat pe varianta care printeaza in consola;
+-Am considerat apoi moleculele ca fiind atomi si moleculele ca fiind reactia si am aplicat acelasi principiu de sincronizare;
+-Dupa ce sincronizarea a fost corecta am readaugat scrierea in fisier a stringurilor(precum varianta maintxt.c;
+-Finally am adaugat structurile si am adaptat scrierea la structuri si fisier .dat;
+
+
+Alexandru Risa 30221

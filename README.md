@@ -12,4 +12,5 @@ N se specifica ca si argument din linia de comanda.
 
 Apelul programului:
 ./t2  N 
-./t2 -o N     daca se doreste ca atomii sa intre in molecule in ordinea in care au aparut (au fost creati)
+
+Mai multe detalii in documentatie.
